@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>await的应用</title>
+  </head>
+  <body>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      function sendAjax(url, data) {
+        return new Promise((resolve, reject) => {
+          //实例xhr
+          const xhr = new XMLHttpRequest()
+          //绑定监听
+          xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+              if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response)
+              else reject(`请求出了点问题`)
+            }
+          }
+          //整理参数
+          let str = ''
+          for (let key in data) {
+            str += `${key}=${data[key]}&`
+          }
+          str = str.slice(0, -1)
+          xhr.open('GET', url + '?' + str)
+          xhr.responseType = 'json'
+          xhr.send()
+        })
+      }
+      ;(async () => {
+        try {
+          const first = await sendAjax(
+            'https://api.apiopen.top/api/getShortVideo',
+            { page: 1 },
+          )
+          console.log(first)
+          const second = await sendAjax(
+            'https://api.apiopen.top/api/getShortVideo',
+            { page: 1 },
+          )
+          console.log(second)
+          const third = await sendAjax(
+            'https://api.apiopen.top/api/getShortVideo',
+            { page: 1 },
+          )
+          console.log(third)
+        } catch (error) {
+          console.error(error)
+        }
+      })()
+    </script>
+  </body>
+</html>
